@@ -26,7 +26,11 @@ public class Main {
 		}
 
 	}
-	public static int gestionCuentas(BDMysql gestionBancaria,Connection connection){
+	/**
+	 * Metodo que pide la seleccion del menu cuentas
+	 * @return	devulve el numero seleccionado del menu
+	 */
+	public static int gestionCuentas(){
 		Scanner input=new Scanner(System.in);
 		boolean flag=true;
 		int menu=0;
@@ -48,6 +52,12 @@ public class Main {
 		}
 		return menu;
 	}
+	/**
+	 * Metodo que pide la informacion para hacer un ingreso
+	 * @param gestionBancaria
+	 * @param connection
+	 * @return devuelve 0 si se ha realizado correctamente, 1 si el numero de cuenta no existe y 2 si la cuenta está de baja
+	 */
 	public static int ingresarDinero(BDMysql gestionBancaria,Connection connection) {
 		Scanner input=new Scanner(System.in);
 		double importe = 0;
@@ -93,6 +103,12 @@ public class Main {
 			}
 		}
 	}
+	/**
+	 * Metodo que pide la informacion para retirar el dinero
+	 * @param gestionBancaria
+	 * @param connection
+	 * @return devuelve 0 si se ha realizado correctamente la salida, 1 si no hay suficiente saldo, 2 si no se ha encontrado al usuario , 3 si hay una excepcion sql y 4 si la cuenta está de baja
+	 */
 	public static int retirarDinero(BDMysql gestionBancaria,Connection connection) {
 		Scanner input=new Scanner(System.in);
 		double importe = 0;
@@ -139,6 +155,12 @@ public class Main {
 			}
 		}
 	}
+	/**
+	 * Metodo que pide la informacion para hacer una transferencia
+	 * @param gestionBancaria
+	 * @param connection
+	 * @return devuelve 0 si se ha realizado corectamente la transferencia y 1 si no hay suficiente dinero en la cuenta origen, 2 si la cuenta origen está de baja y 3 si la cuenta destino está de baja
+	 */
 	public static int hacerTransferencia(BDMysql gestionBancaria,Connection connection) {
 		Scanner input=new Scanner(System.in);
 		double importe;
@@ -187,6 +209,10 @@ public class Main {
 			}
 		}
 	}
+	/**
+	 * Metodo que pide la seleccion del menu clientes
+	 * @return	devulve el numero seleccionado del menu
+	 */
 	public static int gestionClientes(){
 		Scanner input=new Scanner(System.in);
 		boolean flag=true;
@@ -206,6 +232,13 @@ public class Main {
 		}
 		return menu;
 	}
+	/**
+	 * Metodo que confirma si existe un cliente con ese dni
+	 * @param gestionBancaria
+	 * @param connection
+	 * @param dni
+	 * @return devuelve true si existe y false si no
+	 */
 	public static boolean existeCliente(BDMysql gestionBancaria,Connection connection,String dni) {
 		if(gestionBancaria.existeCliente(connection, dni)==false) {
 			return false;
@@ -213,6 +246,12 @@ public class Main {
 			return true;
 		}
 	}
+	/**
+	 * Metodo que da de alta a un cliente
+	 * @param gestionBancaria
+	 * @param connection
+	 * @return devuelve true si se ha creado y false si el dni ya existe en la base de datos
+	 */
 	public static boolean altaCliente(BDMysql gestionBancaria,Connection connection) {
 		Scanner input=new Scanner(System.in);
 		String dni,nombre,telefono,direccion;
@@ -230,6 +269,10 @@ public class Main {
 			return true;
 		}
 	}
+	/**
+	 * Metodo que pide la seleccion de la gestion del banco
+	 * @return devuelve la seleccion del menu
+	 */
 	public static int menuPrincipal() {
 		Scanner input=new Scanner(System.in);
 		boolean flag=true;
@@ -250,6 +293,12 @@ public class Main {
 		}
 		return menu;
 	}
+	/**
+	 * Metodo para modificar los datos de un cliente
+	 * @param gestionBancaria
+	 * @param connection
+	 * @return devuelve true si se ha modificado y false si el cliente no existe
+	 */
 	public static boolean modificarCliente(BDMysql gestionBancaria,Connection connection) {
 		Scanner input=new Scanner(System.in);
 		String dni,nombre,telefono,direccion;
@@ -267,6 +316,12 @@ public class Main {
 			return true;
 		}
 	}
+	/**
+	 * Metodo para dar de baja a un cliente
+	 * @param gestionBancaria
+	 * @param connection
+	 * @return true si se ha podido eliminar y false si tiene alguna cuenta activa
+	 */
 	public static boolean bajaCliente(BDMysql gestionBancaria,Connection connection) {
 		Scanner input=new Scanner(System.in);
 		String dni,nombre,telefono,direccion;
@@ -278,7 +333,11 @@ public class Main {
 			return true;
 		}
 	}
-	public static String pideDni(BDMysql gestionBancaria,Connection connection) {
+	/**
+	 * Metodo que pide el dni del cliente
+	 * @return devuelve el dni del cliente
+	 */
+	public static String pideDni() {
 		Scanner input=new Scanner (System.in);
 		String dni;
 		int menu=0;
@@ -286,6 +345,12 @@ public class Main {
 		dni=input.nextLine();
 		return dni;
 	}
+	/**
+	 * Metodo que controla toda la seleccion de todos los menus y sus resultados
+	 * @param gestionBancaria
+	 * @param connection
+	 * @return devuelve true si se ha ejecutado bien el programa y false si ha habido un falo en la conexion a mysql
+	 */
 	public static boolean appGestion(BDMysql gestionBancaria, Connection connection) {
 		int numMenuPrincipal,numMenuCliente,numMenuCuentas;
 		String dni;
@@ -333,7 +398,7 @@ public class Main {
 				break;
 			}case 2:{
 				do {
-					numMenuCuentas=gestionCuentas(gestionBancaria, connection);
+					numMenuCuentas=gestionCuentas();
 					switch(numMenuCuentas) {
 					case 0:{
 						break;
@@ -418,7 +483,7 @@ public class Main {
 						break;
 					}case 6:{
 						System.out.println();
-						String infoCuentas=gestionBancaria.mostrarCuentasCliente(connection,pideDni(gestionBancaria, connection));
+						String infoCuentas=gestionBancaria.mostrarCuentasCliente(connection,pideDni());
 						if(infoCuentas==null) {
 
 						}else {
@@ -451,6 +516,12 @@ public class Main {
 		gestionBancaria.cerrarConexion(connection);
 		return true;
 	}
+	/**
+	 * Metodo que da de alta una cuenta o cambia a activa la que este de baja
+	 * @param gestionBancaria
+	 * @param connection
+	 * @return devuelve 2 o 0 si se ha realizado correctamente la creacion de la cuenta o darse de alta y 1 si la cuenta no existe al intentar cambiar el estado de una cuenta y 3 si el dni con el que se intenta dar de alta la cuenta no existe  
+	 */
 	public static int darAltaCuenta(BDMysql gestionBancaria, Connection connection) {
 		Scanner input=new Scanner(System.in);
 		int tipoAlta = 0;
@@ -486,7 +557,7 @@ public class Main {
 			} 
 		}else {
 			if(tipoAlta==2) {
-				String dni=pideDni(gestionBancaria, connection);
+				String dni=pideDni();
 				if(gestionBancaria.crearCuenta(connection, dni)==true) {
 					return 2;
 				}else {
@@ -498,6 +569,12 @@ public class Main {
 			}
 		}
 	}
+	/**
+	 * Metodo que da de baja a un cliente
+	 * @param gestionBancaria
+	 * @param connection
+	 * @return true si se ha dado de baja y false si no existe esa cuenta
+	 */
 	public static boolean darBajaCliente(BDMysql gestionBancaria, Connection connection) {
 		Scanner input=new Scanner(System.in);
 		System.out.println("Dime el numero de cuenta:");
@@ -518,6 +595,12 @@ public class Main {
 			return false;
 		} 
 	}
+	/**
+	 * Metodo que muestra los movimientos realizados por un cliente entre dos fechas
+	 * @param gestionBancaria
+	 * @param connection
+	 * @return devuelve los movimientos realizados
+	 */
 	public static String mostrarMovimientosCuenta(BDMysql gestionBancaria, Connection connection) {
 		Scanner input=new Scanner(System.in);
 		System.out.println("Dime numero de cuenta:");
@@ -543,7 +626,10 @@ public class Main {
 		
 		return gestionBancaria.mostrarMovimientoCliente(connection,numCuenta,fechaInicio,fechaFin );
 	}
-
+	/**
+	 * Metodo que pide la fecha al usuario
+	 * @return devuelve la fecha correcta
+	 */
 	private static Date pedirFecha() {
 		Scanner input = new Scanner(System.in);
 		boolean flag = true;
@@ -599,7 +685,13 @@ public class Main {
 		return fechaSQL;
 	}
 
-
+	/**
+	 * Metodo que verifica la fecha introducida
+	 * @param dia
+	 * @param mes
+	 * @param anio
+	 * @return true si está bien introducida y false si no
+	 */
 	private static boolean fechaValida(int dia, int mes, int anio) {
 		if (mes < 1 || mes > 12 || dia < 1) {
 			System.out.println("Fecha inválida. Intente nuevamente.");
@@ -618,7 +710,11 @@ public class Main {
 
 		return true;
 	}
-
+	/**
+	 * Metodo que mira si es año bisiesto
+	 * @param anio
+	 * @return true si lo es y false si no
+	 */
 	private static boolean esAnioBisiesto(int anio) {
 		return (anio % 4 == 0 && anio % 100 != 0) || (anio % 400 == 0);
 	}
